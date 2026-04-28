@@ -224,8 +224,8 @@ export default function HomePage() {
         </section>
 
         {/* Chat Section */}
-        <section className="chatSection" ref={chatSectionRef} id="chat">
-          <div className="chatSectionContent">
+        <section className="chatSection !w-full" ref={chatSectionRef} id="chat">
+          <div className="chatSectionContent !w-full">
             <h2 className="chatSectionTitle">Try It Now</h2>
 
             <div className="chatContainer">

@@ -78,7 +78,7 @@ export function Chat() {
         <div className="emptyStateContainer">
           <div className="emptyStateIcon">✨</div>
           <div className="emptyStateText">
-            Start by asking a question about any topic
+            Start by generating questions about any topic
           </div>
         </div>
       ) : (
