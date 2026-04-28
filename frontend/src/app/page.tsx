@@ -69,7 +69,7 @@ export default function HomePage() {
                 <span>Get Started Free</span>
                 <span style={{ marginLeft: "0.5rem" }}>→</span>
               </button>
-              <button className="btnSecondary" onClick={() => window.open("https://github.com/Mustansir101/Multi-PDF-RAG", "_blank")}>
+              <button className="btnSecondary" onClick={() => window.open("https://github.com/Mustansir101/AI-Question-Generater", "_blank")}>
                 <span>View Documentation</span>
               </button>
             </div>

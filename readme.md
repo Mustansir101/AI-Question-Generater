@@ -1,78 +1,303 @@
-# Multi PDF RAG System
+# QuestionAI - AI-Powered Question Generation Engine
 
-Contextual Q&A across multiple PDFs with reliable citations. Backend powered by FastAPI, LangChain, Qdrant, and Gemini; frontend built with Next.js.
+> Transform any topic into thoughtfully crafted, contextually relevant questions using advanced AI technology. Perfect for educators, students, and content creators seeking to enhance learning and engagement.
 
-**Tech Stack**
+## 🎯 Overview
 
-- **Backend:** FastAPI, Pydantic, LangChain, Qdrant, Google Generative AI Embeddings, Uvicorn
-- **Frontend:** Next.js 14, React 18, TypeScript
-- **Infra/Deps:** Python 3.13+, Node.js 18+, Docker (for Qdrant)
+QuestionAI is a modern, full-stack application that leverages Google's Gemini API to generate high-quality, contextually relevant questions from any topic. The system combines advanced prompt engineering with a professional, responsive web interface to deliver an exceptional user experience.
 
-## Overview
+### Key Features
 
-- Ingest multiple PDFs, split them into metadata‑rich chunks, embed with Gemini `text-embedding-004`, and store in Qdrant.
-- Run similarity search to retrieve relevant chunks and generate answers with `gemini-2.5-flash`, grounded in the retrieved context.
-- Preserve `source` (filename) and `page_label` (page number) metadata for citation. The UI displays citations when provided.
+- ✨ **AI-Powered Generation** - Powered by Google's Gemini 2.5 Flash API
+- ⚡ **Lightning Fast** - Instant question generation with optimized backend
+- 🎨 **Beautiful UI** - Modern, responsive design with professional styling
+- 🔒 **Smart Prompt Engineering** - Carefully crafted system prompts ensure quality
+- 📱 **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
+- 🎓 **Versatile** - Generate questions for education, training, interviews, research, and more
 
-## Architecture
+## 🏗️ Architecture
 
-- **PDF Ingestion:** Parse each page, extract text, attach metadata: `source`, `page_label`.
-- **Chunking:** LangChain `CharacterTextSplitter` produces overlapping chunks for better recall.
-- **Embedding:** `GoogleGenerativeAIEmbeddings` (`models/text-embedding-004`) using `GOOGLE_API_KEY`.
-- **Vector Store:** `QdrantVectorStore` backed by Qdrant over `QDRANT_URL` and `QDRANT_COLLECTION`.
-- **Retrieval:** `similarity_search` returns top chunks with metadata.
-- **Generation:** Prompt `gemini-2.5-flash` via OpenAI SDK against Google Generative Language API (`GEMINI_API_KEY`) with a strict system prompt that confines answers to retrieved context.
+### Tech Stack
 
-Key implementation points:
+**Backend:**
+- FastAPI - High-performance Python web framework
+- Pydantic - Data validation and settings management
+- OpenAI SDK - Interface for Google Generative Language API
+- Python 3.13+
 
-- Chunking on `Document` objects retains metadata through the pipeline for accurate citations.
-- The server holds vector stores per session (`session_id`) so the browser never uploads embeddings or vectors.
+**Frontend:**
+- Next.js 14+ - React framework for production
+- React 18+ - UI library
+- TypeScript - Type-safe JavaScript
+- Lucide React - Beautiful SVG icons
+- Pure CSS3 - Modern styling with CSS variables
+- Node.js 18+
 
-## Backend API
+### System Architecture
 
-- POST `/process-pdfs`
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      QuestionAI Application                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌─────────────────────┐            ┌──────────────────────┐   │
+│  │   Frontend (Next.js)│            │  Backend (FastAPI)   │   │
+│  │                     │            │                      │   │
+│  │  - Landing Page     │──HTTP──→   │  - API Endpoints     │   │
+│  │  - Chat Interface   │←──JSON──┤   │  - Gemini Integration│   │
+│  │  - Feature Cards    │            │  - Prompt Engineering│   │
+│  │  - Hero Section     │            │  - Response Handler  │   │
+│  │  - Use Cases        │            │                      │   │
+│  │  - Professional UI  │            │  Port: 8000          │   │
+│  │                     │            │                      │   │
+│  │  Port: 3000         │            └──────────────────────┘   │
+│  └─────────────────────┘                      │                 │
+│          │                                     │                 │
+│          └─────────────────────┬───────────────┘                │
+│                                │                                 │
+│                    ┌───────────▼─────────┐                      │
+│                    │  Google Gemini API  │                      │
+│                    │  (text-generation)  │                      │
+│                    └─────────────────────┘                      │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-  - Form‑Data: `files`: one or more PDF files.
-  - Behavior: extracts per‑page text, builds `Document` chunks with metadata, embeds, creates a Qdrant vector store, and stores it server‑side under a new `session_id`.
-  - Response (JSON):
-    - `message`: string
-    - `session_id`: string
-    - `files`: string[]
+## 🚀 Getting Started
 
-- POST `/ask-question`
-  - JSON body:
-    - `session_id`: string
-    - `user_query`: string
-  - Behavior: runs `similarity_search` on the session’s vector store, crafts a context block (including page and source), and calls Gemini for an answer grounded in that context.
-  - Response (JSON):
-    - `answer`: string
-    - `sources`?: `[{ source: string; page_label: number }]` (optional; UI displays if provided)
+### Prerequisites
 
-## Environment Variables
+- **Python 3.13+** with pip
+- **Node.js 18+** with npm
+- **Google API Key** for Gemini API access
 
-Place a `.env` file in `backend/` with:
+### Installation
 
-- `GOOGLE_API_KEY`: for embeddings (`text-embedding-004`).
-- `GEMINI_API_KEY`: for chat generation (`gemini-2.5-flash` via Google Generative Language API).
-- `QDRANT_URL`: default `http://localhost:6333`.
-- `QDRANT_COLLECTION`: default `MultiPDFChat`.
+#### 1. Clone the Repository
 
-Frontend environment (`frontend/.env.local`):
+```bash
+git clone <repository-url>
+cd Multi\ PDF\ RAG
+```
 
-- `NEXT_PUBLIC_API_BASE_URL`: default `http://localhost:8000`.
+#### 2. Backend Setup
 
-## Data Pipeline Details
+```bash
+cd backend
 
-- `get_pdf_documents()` and server ingestion: extract per‑page text and attach metadata: `source` (filename) and `page_label` (1‑based page index).
-- `get_text_chunks()`: LangChain `CharacterTextSplitter` with `chunk_size=1000`, `chunk_overlap=200` preserves metadata.
-- `create_vector_store()`: `QdrantVectorStore.from_documents(...)` persists embeddings to Qdrant.
-- `answer_question()`: builds a strict `SYSTEM_PROMPT` and calls Gemini via OpenAI SDK (`base_url=https://generativelanguage.googleapis.com/v1beta/openai/`).
-- Citations: the UI can render `sources` (`source`, `page_label`) if the backend includes them in the response. Metadata is carried through retrieval; adding `sources` to the response is a straightforward enhancement.
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-## Validation & Safety
+# Install dependencies
+pip install -r requirements.txt
 
-- Upload validation: rejects non‑PDFs/unreadable files with 400 errors.
-- Request validation: `AskQuestionRequest` enforces `session_id` and `user_query`.
-- Session isolation: per‑session vector stores in memory on the server (`VECTOR_STORES[session_id]`).
-- Grounded answers: the system prompt instructs to answer only from retrieved context; answers are constrained and include guidance to reference pages.
+# Create .env file with your API keys
+echo "GEMINI_API_KEY=your_api_key_here" > .env
+```
 
+#### 3. Frontend Setup
+
+```bash
+cd ../frontend
+
+# Install dependencies
+npm install
+
+# Create .env.local file
+echo "NEXT_PUBLIC_API_BASE_URL=http://localhost:8000" > .env.local
+```
+
+### Running the Application
+
+#### Start Backend Server
+
+```bash
+cd backend
+source .venv/bin/activate
+python server.py
+```
+
+The backend will be available at `http://localhost:8000`
+
+#### Start Frontend Development Server
+
+```bash
+cd frontend
+npm run dev
+```
+
+The frontend will be available at `http://localhost:3000`
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## 📚 API Documentation
+
+### Base URL
+
+```
+http://localhost:8000
+```
+
+### Endpoints
+
+#### POST `/ask-question`
+
+Generate questions based on a user query.
+
+**Request:**
+```json
+{
+  "user_query": "What are the main types of algorithms?"
+}
+```
+
+**Response:**
+```json
+{
+  "answer": "1. Explain the fundamental working principle of sorting algorithms...\n2. Describe the differences between recursive and iterative algorithms...\n3. Compare the time complexity of merge sort and quick sort..."
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:8000/ask-question \
+  -H "Content-Type: application/json" \
+  -d '{"user_query": "machine learning basics"}'
+```
+
+## 🎨 Frontend Features
+
+### Pages & Sections
+
+1. **Navigation Header**
+   - Logo and branding
+   - Quick navigation links
+   - "Try Now" CTA button
+   - Responsive mobile menu
+
+2. **Hero Section**
+   - Eye-catching headline
+   - Clear value proposition
+   - Call-to-action buttons
+   - Impressive statistics
+
+3. **Features Section**
+   - AI-Powered Generation
+   - Lightning Fast Responses
+   - Diverse Question Types
+   - Developer Friendly APIs
+   - Smart Prompt Engineering
+   - Context-Aware Questions
+
+4. **How It Works**
+   - 4-step process visualization
+   - Clear descriptions
+   - Visual flow
+
+5. **Use Cases**
+   - Education & Teaching
+   - Corporate Training
+   - Content Creation
+   - Interview Preparation
+   - Research & Academia
+   - Skill Development
+
+6. **Interactive Chat**
+   - Beautiful chat interface
+   - Real-time message updates
+   - Error handling
+   - Auto-scrolling
+
+7. **Footer**
+   - Comprehensive links
+   - Product information
+   - Company details
+   - Resources
+   - Legal links
+
+### Design System
+
+The frontend uses a modern color palette with CSS variables:
+
+```css
+--accent: #6366f1 (Indigo)
+--accent-dark: #4f46e5
+--accent-light: #818cf8
+--text: #1a1a1a
+--text-secondary: #666666
+--bg: #ffffff
+--bg-secondary: #f5f7fa
+--border: #e0e7ff
+```
+
+All styling is built with pure CSS3 for optimal performance and customization.
+
+## 📁 Project Structure
+
+```
+Multi PDF RAG/
+├── backend/
+│   ├── server.py              # FastAPI application
+│   ├── requirements.txt        # Python dependencies
+│   ├── .env                   # Environment variables (create this)
+│   ├── .venv/                 # Virtual environment
+│   └── pyproject.toml         # Project configuration
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── page.tsx       # Landing page
+│   │   │   ├── layout.tsx     # Root layout
+│   │   │   └── globals.css    # Global styles
+│   │   ├── components/
+│   │   │   ├── Chat.tsx       # Chat component
+│   │   │   └── PdfProcessor.tsx
+│   │   └── lib/
+│   │       ├── config.ts      # Configuration
+│   │       └── types.ts       # TypeScript types
+│   ├── package.json           # Node dependencies
+│   ├── tsconfig.json          # TypeScript config
+│   ├── next.config.mjs        # Next.js config
+│   └── .env.local            # Environment variables (create this)
+│
+├── readme.md                  # This file
+└── FRONTEND_README.md         # Frontend documentation
+```
+## 📊 How It Works
+
+### Question Generation Flow
+
+1. **User Input** - User enters a topic in the chat interface
+2. **API Request** - Frontend sends request to backend API
+3. **Prompt Engineering** - Backend crafts a sophisticated system prompt
+4. **API Call** - System makes request to Google Gemini API
+5. **Response** - Gemini generates contextually relevant questions
+6. **Display** - Frontend renders questions in the chat interface
+
+
+## 🔐 Security Considerations
+
+- API keys are stored securely in environment variables
+- CORS is configured appropriately
+- Request validation is enforced
+- No sensitive data is logged
+- Frontend communicates only with trusted backend
+
+## 📦 Dependencies
+
+### Backend
+
+See `backend/requirements.txt` for full list. Key dependencies:
+- fastapi
+- pydantic
+- openai
+- python-dotenv
+- uvicorn
+
+### Frontend
+
+See `frontend/package.json` for full list. Key dependencies:
+- next
+- react
+- typescript
+- lucide-react
