@@ -33,35 +33,6 @@ QuestionAI is a modern, full-stack application that leverages Google's Gemini AP
 - Pure CSS3 - Modern styling with CSS variables
 - Node.js 18+
 
-### System Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      QuestionAI Application                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│  ┌─────────────────────┐            ┌──────────────────────┐   │
-│  │   Frontend (Next.js)│            │  Backend (FastAPI)   │   │
-│  │                     │            │                      │   │
-│  │  - Landing Page     │──HTTP──→   │  - API Endpoints     │   │
-│  │  - Chat Interface   │←──JSON──┤   │  - Gemini Integration│   │
-│  │  - Feature Cards    │            │  - Prompt Engineering│   │
-│  │  - Hero Section     │            │  - Response Handler  │   │
-│  │  - Use Cases        │            │                      │   │
-│  │  - Professional UI  │            │  Port: 8000          │   │
-│  │                     │            │                      │   │
-│  │  Port: 3000         │            └──────────────────────┘   │
-│  └─────────────────────┘                      │                 │
-│          │                                     │                 │
-│          └─────────────────────┬───────────────┘                │
-│                                │                                 │
-│                    ┌───────────▼─────────┐                      │
-│                    │  Google Gemini API  │                      │
-│                    │  (text-generation)  │                      │
-│                    └─────────────────────┘                      │
-└─────────────────────────────────────────────────────────────────┘
-```
-
 ## 🚀 Getting Started
 
 ### Prerequisites
