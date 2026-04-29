@@ -203,37 +203,6 @@ The frontend uses a modern color palette with CSS variables:
 
 All styling is built with pure CSS3 for optimal performance and customization.
 
-## 📁 Project Structure
-
-```
-Multi PDF RAG/
-├── backend/
-│   ├── server.py              # FastAPI application
-│   ├── requirements.txt        # Python dependencies
-│   ├── .env                   # Environment variables (create this)
-│   ├── .venv/                 # Virtual environment
-│   └── pyproject.toml         # Project configuration
-│
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── page.tsx       # Landing page
-│   │   │   ├── layout.tsx     # Root layout
-│   │   │   └── globals.css    # Global styles
-│   │   ├── components/
-│   │   │   ├── Chat.tsx       # Chat component
-│   │   │   └── PdfProcessor.tsx
-│   │   └── lib/
-│   │       ├── config.ts      # Configuration
-│   │       └── types.ts       # TypeScript types
-│   ├── package.json           # Node dependencies
-│   ├── tsconfig.json          # TypeScript config
-│   ├── next.config.mjs        # Next.js config
-│   └── .env.local            # Environment variables (create this)
-│
-├── readme.md                  # This file
-└── FRONTEND_README.md         # Frontend documentation
-```
 ## 📊 How It Works
 
 ### Question Generation Flow
