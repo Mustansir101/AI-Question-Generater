@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "QuestionAI - AI-Powered Question Generation",
+  title: "AI Questions Generator - AI-Powered Question Generation",
   description: "Transform any topic into thoughtfully crafted questions using advanced AI. Perfect for educators, students, and content creators.",
   keywords: [
     "AI Questions",
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     "Gemini API",
     "RAG",
   ],
-  authors: [{ name: "QuestionAI Team" }],
-  creator: "QuestionAI",
+  authors: [{ name: "AI Questions Generator Team" }],
+  creator: "AI Questions Generator",
 };
 
 export default function RootLayout({

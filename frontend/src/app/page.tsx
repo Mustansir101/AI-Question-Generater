@@ -33,7 +33,7 @@ export default function HomePage() {
         <div className="headerContent">
           <div className="logo">
             <div className="logoIcon">✨</div>
-            <span>QuestionAI</span>
+            <span>AI Questions Generator</span>
           </div>
           <nav className="navLinks">
             <a href="#features">Features</a>
@@ -70,7 +70,7 @@ export default function HomePage() {
                 <span style={{ marginLeft: "0.5rem" }}>→</span>
               </button>
               <button className="btnSecondary" onClick={() => window.open("https://github.com/Mustansir101/AI-Question-Generater", "_blank")}>
-                <span>View Documentation</span>
+                <span>View Source Code</span>
               </button>
             </div>
           </div>
@@ -281,7 +281,7 @@ export default function HomePage() {
 
           <div className="footerBottom">
             <p>
-              © 2024 QuestionAI. All rights reserved. Powered by FastAPI, Next.js, and Google
+              © 2026 AI Questions Generator. All rights reserved. Powered by FastAPI, Next.js, and Google
               Gemini.
             </p>
           </div>

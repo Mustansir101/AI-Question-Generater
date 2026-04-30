@@ -421,7 +421,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 600px;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -488,6 +488,7 @@ body {
   border-radius: 12px;
   line-height: 1.5;
   font-size: 0.95rem;
+  white-space: pre-wrap;
 }
 
 .messageItem.assistant .messageBubble {

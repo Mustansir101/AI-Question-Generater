@@ -13,7 +13,28 @@ export function Chat() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const bottomEl = bottomRef.current;
+    if (!bottomEl) return;
+
+    const findScrollParent = (start: HTMLElement): HTMLElement | null => {
+      let el: HTMLElement | null = start.parentElement;
+      while (el) {
+        const style = window.getComputedStyle(el);
+        const overflowY = style.overflowY;
+        const canScrollY =
+          (overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay") &&
+          el.scrollHeight > el.clientHeight;
+
+        if (canScrollY) return el;
+        el = el.parentElement;
+      }
+      return null;
+    };
+
+    const scrollParent = findScrollParent(bottomEl);
+    if (scrollParent) {
+      scrollParent.scrollTo({ top: scrollParent.scrollHeight, behavior: "smooth" });
+    }
   }, [messages]);
 
   async function send() {
